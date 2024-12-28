@@ -246,6 +246,7 @@ export class Knob  extends ParameterControlBase
 
         const onMouseUp = (event) =>
         {
+            this.releasePointerCapture?.(event.pointerId);
             this.previousScreenY = undefined;
             this.accumulatedRotation = undefined;
             window.removeEventListener ("mousemove", onMouseMove);
@@ -255,6 +256,10 @@ export class Knob  extends ParameterControlBase
 
         const onMouseDown = (event) =>
         {
+            // Only accept left mouse button clicks
+            if (event.button != 0) return;
+            // This makes sure the control stays responsive when the pointer leaves the window area during the gesture
+            this.setPointerCapture?.(event.pointerId);
             this.previousScreenY = event.screenY;
             this.accumulatedRotation = this.rotation;
             this.beginGesture();
